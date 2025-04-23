@@ -7,8 +7,10 @@ import (
 	"crypto/rand"
 	crypto_rand "crypto/rand"
 	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
+	"encoding/hex"
 	"encoding/pem"
 	"fmt"
 	"io"
@@ -135,4 +137,14 @@ func DecryptRSA(toDecrypt, filePath string) (string, error) {
 	}
 
 	return string(decryptedBytes), nil
+}
+
+func EncryptSHA256(value string) string {
+	hashed := sha256.Sum256([]byte(value))
+	return fmt.Sprintf("%x", hashed)
+}
+
+func HexHash(value []byte) string {
+	hex := hex.EncodeToString(value[:])
+	return fmt.Sprintf("%x", hex)
 }

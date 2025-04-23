@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func OpenSQL(pool Mysql_pool) (*sql.DB, error) {
+func OpenConnection(pool Mysql_pool) (*sql.DB, error) {
 	dsn := pool.db_user + ":" + pool.db_password + "@tcp(" + pool.db_host + ":" + pool.db_port + ")/" + pool.db_name
 	conn, err := sql.Open("mysql", dsn)
 	if err != nil {
@@ -15,7 +15,7 @@ func OpenSQL(pool Mysql_pool) (*sql.DB, error) {
 	return conn, nil
 }
 func Execute(mysql_connections *Mysql_pool, query string, query_identifier string) ([]map[string]any, error) {
-	mysql_connection, _ := OpenSQL(*mysql_connections)
+	mysql_connection, _ := OpenConnection(*mysql_connections)
 	defer mysql_connection.Close()
 
 	tx, err := mysql_connection.Begin()
