@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func Convert_to_float_64(input any) float64 {
+func ToFloat64(input any) float64 {
 	switch v := input.(type) {
 	case float64:
 		return v
@@ -46,6 +46,6 @@ func Convert_to_float_64(input any) float64 {
 	return 0.0
 }
 
-func Convert_to_int_64(value any) int64 {
+func ToInt64(value any) int64 {
 	return value.(int64)
 }
