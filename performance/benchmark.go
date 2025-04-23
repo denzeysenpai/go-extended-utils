@@ -24,7 +24,7 @@ func (benchmark_info *Benchmark_info) Add_new_algo(code string, details string) 
 	benchmark_info.algorithms = append(benchmark_info.algorithms, Algorithm{code, details})
 }
 
-func Start_new_benchmark(details string) *Benchmark_info {
+func NewBenchmark(details string) *Benchmark_info {
 	start := time.Now()
 	return &Benchmark_info{
 		start:      start,
@@ -62,26 +62,3 @@ func (benchmark_info *Benchmark_info) Current_algo() Algorithm {
 }
 
 // ? BENCHMARKING AND ALGO
-func Date_code() string {
-	var strTemp string
-	defer func() {
-		if r := recover(); r != nil {
-			strTemp = ""
-		}
-	}()
-	now := time.Now()
-	calcDateTime := now.Year() - 2016
-	calcDateTime = (calcDateTime * 12) + int(now.Month())
-	calcDateTime = (calcDateTime * 32) + now.Day()
-	strTemp = fmt.Sprintf("%04d", calcDateTime)
-
-	return strTemp
-}
-
-func Null_check(str any) any {
-	if str == nil {
-		return "NULL"
-	} else {
-		return str
-	}
-}

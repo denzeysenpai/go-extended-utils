@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func Generate_insert_query(tableName string, data map[string]any) string {
+func GenerateInsertQuery(tableName string, data map[string]any) string {
 	columns := []string{}
 	values := []string{}
 
@@ -29,4 +29,13 @@ func Generate_insert_query(tableName string, data map[string]any) string {
 
 	query := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s);", tableName, columnsPart, valuesPart)
 	return query
+}
+
+// returns the string NULL if str is nil
+func CheckForNull(str any) any {
+	if str == nil {
+		return "NULL"
+	} else {
+		return str
+	}
 }
