@@ -13,6 +13,16 @@ func GenerateNumberString(limit int) string {
 	}
 	return result
 }
+func GenerateString(limit int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	runes := make([]rune, limit)
+
+	for i := range runes {
+		runes[i] = rune(charset[rand.Intn(len(charset))])
+	}
+
+	return string(runes)
+}
 func GenerateSHA1(fields ...string) string {
 	concatenated := ""
 	for _, field := range fields {
