@@ -17,9 +17,49 @@ import (
 	"os"
 )
 
-func EncryptAES(key string, data string) (string, error) {
+func EncryptAESShuffled(key string, data string) (string, error) {
 	final_key := pad_key(key)
 	byteMsg := []byte(shuffle_string(data))
+	block, err := aes.NewCipher(final_key)
+	if err != nil {
+		return "", fmt.Errorf("Could not create new cipher: %v", err)
+	}
+	cipherText := make([]byte, aes.BlockSize+len(byteMsg))
+	iv := cipherText[:aes.BlockSize]
+	if _, err = io.ReadFull(crypto_rand.Reader, iv); err != nil {
+		return "", fmt.Errorf("Could not encrypt: %v", err)
+	}
+
+	stream := cipher.NewCFBEncrypter(block, iv)
+	stream.XORKeyStream(cipherText[aes.BlockSize:], byteMsg)
+
+	return base64.StdEncoding.EncodeToString(cipherText), nil
+}
+
+func DecryptAESShuffled(key string, data string) (string, error) {
+	final_key := pad_key(key)
+
+	cipherText, err := base64.StdEncoding.DecodeString(data)
+	if err != nil {
+		return "", fmt.Errorf("Could not base64 decode: %v", err)
+	}
+
+	block, err := aes.NewCipher(final_key)
+	if err != nil {
+		return "", fmt.Errorf("Could not create new cipher: %v", err)
+	}
+
+	iv := cipherText[:aes.BlockSize]
+	cipherText = cipherText[aes.BlockSize:]
+
+	stream := cipher.NewCFBDecrypter(block, iv)
+	stream.XORKeyStream(cipherText, cipherText)
+
+	return shuffle_string(string(cipherText)), nil
+}
+func EncryptAES(key string, data string) (string, error) {
+	final_key := pad_key(key)
+	byteMsg := []byte(data)
 	block, err := aes.NewCipher(final_key)
 	if err != nil {
 		return "", fmt.Errorf("Could not create new cipher: %v", err)
@@ -55,7 +95,7 @@ func DecryptAES(key string, data string) (string, error) {
 	stream := cipher.NewCFBDecrypter(block, iv)
 	stream.XORKeyStream(cipherText, cipherText)
 
-	return shuffle_string(string(cipherText)), nil
+	return string(cipherText), nil
 }
 
 func pad_key(key string) []byte {

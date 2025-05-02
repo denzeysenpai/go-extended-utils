@@ -24,7 +24,6 @@ var SUPPORTED_TYPES = []string{
 	".html",
 }
 
-
 func NewLogger(name string, base_path string, file_type string) Logger {
 	final_path := ".txt"
 	if slices.Contains(SUPPORTED_TYPES, file_type) {
